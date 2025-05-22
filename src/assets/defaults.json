@@ -1,0 +1,29 @@
+{
+  "weightBalance": [
+    {
+      "name": "Tomvægt",
+      "weight": 1580.7,
+      "arm": 86.3
+    },
+    {
+      "name": "Brændstof",
+      "weight": 202,
+      "arm": 95
+    },
+    {
+      "name": "Forsæder",
+      "weight": 187,
+      "arm": 80.5
+    },
+    {
+      "name": "Bagsæder",
+      "weight": 0,
+      "arm": 118.1
+    },
+    {
+      "name": "Bagage",
+      "weight": 20,
+      "arm": 142.8
+    }
+  ]
+}
