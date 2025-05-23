@@ -1,9 +1,10 @@
 <script setup lang="ts">
 import { DataTableCreateSummary, NCard, NDataTable, NInputNumber } from 'naive-ui'
-import { ref, computed, h } from 'vue';
+import { ref, computed, h, watch } from 'vue';
 import { weightBalance } from '@/assets/defaults.json'
 import { DataTableColumn } from 'naive-ui';
 import { formatNumber } from '@/helpers';
+import { store } from '@/store';
 
 class Line {
   name: string
@@ -74,6 +75,10 @@ const summary: DataTableCreateSummary = (data) => {
     }
   }
 }
+
+watch(totalWeight, (value) => {
+  store.weight = value
+}, { immediate: true })
 </script>
 
 <template>

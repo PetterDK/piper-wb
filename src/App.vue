@@ -3,7 +3,6 @@ import FuelComponent from './components/FuelComponent.vue';
 import PerformanceComponent from './components/PerformanceComponent.vue';
 import WeightBalanceComponent from './components/WeightBalanceComponent.vue';
 import { darkTheme, NConfigProvider, NFlex } from 'naive-ui';
-
 </script>
 
 <template>

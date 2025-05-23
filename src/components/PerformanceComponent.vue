@@ -1,7 +1,8 @@
 <script lang="ts" setup>
 import { formatNumber } from '@/helpers';
+import { store } from '@/store';
 import { NCard, NFlex, NForm, NFormItem, NInputNumber, NDivider, NCheckbox, NCheckboxGroup, NTable, NTag, NRadioGroup, NRadioButton } from 'naive-ui';
-import { computed, ref, watch } from 'vue';
+import { computed, ref, watch, defineProps } from 'vue';
 
 class Factor {
   name: string
@@ -11,11 +12,13 @@ class Factor {
   maxValue?: number
   perUnit?: string
 
-  constructor(name: string, multiplier: number, perUnit?: string, maxValue?: number) {
+  constructor(name: string, multiplier: number, perUnit?: string, maxValue?: number, value?: number, enabled = false) {
     this.name = name
+    this.enabled = enabled
     this.multiplier = multiplier
     this.perUnit = perUnit
     this.maxValue = maxValue
+    this.value = value
   }
 
   public get addedDistance(): number | undefined {
@@ -40,7 +43,12 @@ const factors = ref<Factor[]>([
   new Factor('Langt græs (10-20 cm)', 0.25),
   new Factor('Vand/sjap (max. 2,5 cm)', 0.2, 'cm', 2.5),
   new Factor('Våd sne (max. 5 cm)', 0.1, 'cm', 5),
-  new Factor('Frossen sne (max. 10 cm)', 0.05, 'cm', 10)
+  new Factor('Frossen sne (max. 10 cm)', 0.05, 'cm', 10),
+  new Factor('Temperatur', 0.01, 'celcius over ISA'),
+  new Factor('Tryk (højde over havets overflade)', 0.1, '1000 ft'),
+  new Factor('Hældning op ad bakke', 0.1, '1 grad'),
+  new Factor('Medvind', 0.04, 'kts', 5),
+  new Factor('Vægt', 0.02, '% under MTOM', undefined, Math.round(100 - ((store.weight / store.mtow) * 100)) * -1, true)
 ])
 
 const shortGrassDistance = computed(() => initialStartDistance.value * 0.1)
@@ -48,7 +56,7 @@ const calibratedStartDistance = computed(() => {
   let result = initialStartDistance.value
 
   const addedDistances = factors.value.filter(x => x.enabled).reduce((prev, current) => {
-    return prev + (current.multiplier * initialStartDistance.value)
+    return prev + current.addedDistance
   }, 0)
 
   return result + addedDistances
@@ -112,16 +120,37 @@ watch(unit, (value) => {
             </td>
             <td align="right">
               <div v-if="factor.enabled && factor.addedDistance">
-                {{ Math.sign(factor.addedDistance) ? '+' : '-' }} {{ factor.addedDistance }}
+                {{ Math.sign(factor.addedDistance) === 1 ? '+' : '' }}{{ factor.addedDistance }}
               </div>
             </td>
           </tr>
         </tbody>
         <tfoot>
           <tr>
-            <th colspan="3">Total</th>
+            <th colspan="3">
+              Korrigeret startdistance
+            </th>
             <th style="text-align: right;">
-              {{ calibratedStartDistance }} fod
+              {{ formatNumber(calibratedStartDistance) }} {{ unit }}
+            </th>
+          </tr>
+          <tr>
+            <th colspan="2">
+              Anbefalet min. banelængde
+            </th>
+            <th style="text-align: right;">
+              {{ formatNumber(calibratedStartDistance) }} x 1.25
+            </th>
+            <th style="text-align: right;">
+              {{ formatNumber(calibratedStartDistance * 1.25) }} {{ unit }}
+            </th>
+          </tr>
+          <tr>
+            <th colspan="3">
+              Bane til rådighed
+            </th>
+            <th style="text-align: right;">
+              {{ formatNumber(calibratedStartDistance * 1.25) }} {{ unit }}
             </th>
           </tr>
         </tfoot>
