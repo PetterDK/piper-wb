@@ -3,6 +3,7 @@ import { DataTableCreateSummary, NCard, NDataTable, NInputNumber } from 'naive-u
 import { ref, computed, h } from 'vue';
 import { weightBalance } from '@/assets/defaults.json'
 import { DataTableColumn } from 'naive-ui';
+import { formatNumber } from '@/helpers';
 
 class Line {
   name: string
@@ -63,13 +64,13 @@ const summary: DataTableCreateSummary = (data) => {
       value: 'Total'
     },
     weight: {
-      value: new Intl.NumberFormat('en-US').format(totalWeight.value)
+      value: formatNumber(totalWeight.value)
     },
     arm: {
-      value: new Intl.NumberFormat('en-US').format(totalTorque.value / totalWeight.value)
+      value: formatNumber(totalTorque.value / totalWeight.value)
     },
     torque: {
-      value: new Intl.NumberFormat('en-US').format(totalTorque.value),
+      value: formatNumber(totalTorque.value),
     }
   }
 }

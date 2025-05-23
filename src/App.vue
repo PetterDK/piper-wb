@@ -1,5 +1,6 @@
 <script setup>
 import FuelComponent from './components/FuelComponent.vue';
+import PerformanceComponent from './components/PerformanceComponent.vue';
 import WeightBalanceComponent from './components/WeightBalanceComponent.vue';
 import { darkTheme, NConfigProvider, NFlex } from 'naive-ui';
 
@@ -14,6 +15,7 @@ import { darkTheme, NConfigProvider, NFlex } from 'naive-ui';
       <n-flex>
         <FuelComponent />
         <WeightBalanceComponent />
+        <PerformanceComponent />
       </n-flex>
     </main>
   </n-config-provider>
